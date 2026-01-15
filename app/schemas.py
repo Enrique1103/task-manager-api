@@ -24,10 +24,12 @@ class TaskBase(BaseModel):
     status: Optional[str] = "pendiente"
 
 class TaskCreate(TaskBase):
-    user_id: int
-
-class TaskUpdate(TaskBase):
     pass
+
+class TaskUpdate(BaseModel):
+    tasks_name: Optional[str] = None
+    created: Optional[date] = None
+    status: Optional[str] = None
 
 class TaskResponse(TaskBase):
     id_task: int

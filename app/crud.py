@@ -19,23 +19,38 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 # TAREAS
-def get_tasks(db: Session, user_id: int):
-    return db.query(models.Task).filter(models.Task.user_id == user_id).all()
-
 def create_task(db: Session, task: schemas.TaskCreate, user_id: int):
-    db_task = models.Task(**task.dict(), user_id=user_id)
+    # Extraemos los datos a un diccionario
+    task_data = task.dict()
+    # Nos aseguramos de que 'user_id' no esté en el diccionario para que no choque
+    task_data.pop("user_id", None) 
+    
+    db_task = models.Task(**task_data, user_id=user_id)
     db.add(db_task)
     db.commit()
+
     db.refresh(db_task)
     return db_task
 
-def update_task(db: Session, task_id: int, task_data: schemas.TaskCreate, user_id: int):
-    db_task = db.query(models.Task).filter(models.Task.id_task == task_id, models.Task.user_id == user_id).first()
-    if db_task:
-        for key, value in task_data.dict().items():
-            setattr(db_task, key, value)
-        db.commit()
-        db.refresh(db_task)
+def update_task(db: Session, task_id: int, task_data: schemas.TaskUpdate, user_id: int):
+    # Buscamos la tarea que pertenezca al usuario
+    db_task = db.query(models.Task).filter(
+        models.Task.id_task == task_id, 
+        models.Task.user_id == user_id
+    ).first()
+    
+    if not db_task:
+        return None
+
+    # Convertimos el esquema a diccionario (usar .dict() para Pydantic v1 o .model_dump() para v2)
+    # exclude_unset=True evita que los campos que no enviaste se borren en la DB
+    update_data = task_data.dict(exclude_unset=True) 
+    
+    for key, value in update_data.items():
+        setattr(db_task, key, value)
+    
+    db.commit()
+    db.refresh(db_task)
     return db_task
 
 def delete_task(db: Session, task_id: int, user_id: int):

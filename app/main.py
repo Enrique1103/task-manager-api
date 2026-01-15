@@ -55,15 +55,14 @@ def read_tasks(current_user: models.User = Depends(get_current_user), db: Sessio
 def create_task(task: schemas.TaskCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.create_task(db, task, user_id=current_user.id_user)
 
-# NUEVO: Endpoint para actualizar tarea
-@app.put("/tasks/{task_id}", response_model=schemas.TaskResponse)
+@app.put("/tasks/{id_task}", response_model=schemas.TaskResponse)
 def update_task(
-    task_id: int, 
-    task_update: schemas.TaskUpdate, 
+    id_task: int, 
+    task_update: schemas.TaskUpdate,
     current_user: models.User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
-    updated = crud.update_task(db, task_id, task_update, current_user.id_user)
+    updated = crud.update_task(db, id_task, task_update, current_user.id_user)
     if not updated:
         raise HTTPException(status_code=404, detail="Tarea no encontrada o no autorizada")
     return updated
