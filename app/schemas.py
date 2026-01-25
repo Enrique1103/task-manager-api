@@ -26,7 +26,6 @@ class UserResponse(UserBase):
 # --- TAREAS ---
 class TaskBase(BaseModel):
     tasks_name: str = Field(..., min_length=1, max_length=25)
-    created: Optional[date] = None
     status: Optional[TaskStatus] = TaskStatus.pendiente
 
 class TaskCreate(TaskBase):
@@ -34,11 +33,11 @@ class TaskCreate(TaskBase):
 class TaskUpdate(BaseModel):
     # Todos son opcionales para permitir actualizaciones parciales (PATCH)
     tasks_name: Optional[str] = Field(None, max_length=25)
-    created: Optional[date] = None
     status: Optional[TaskStatus] = None
 class TaskResponse(TaskBase):
     id_task: int
     user_id: int
+    created: date
 
     class Config:
         from_attributes = True

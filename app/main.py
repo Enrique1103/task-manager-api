@@ -1,3 +1,5 @@
+import os
+from scalar_fastapi import get_scalar_api_reference
 from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -10,6 +12,16 @@ app = FastAPI(
     description="API robusta con esquemas de PostgreSQL, JWT y validación Pydantic v2",
     version="1.0.0"
 )
+
+# CONFIGURACIÓN DE SCALAR 
+# Detectamos si estamos en desarrollo (por defecto sí)
+os.getenv("ENV", "development") == "development"
+@app.get("/scalar", include_in_schema=False)
+async def scalar_html():
+    return get_scalar_api_reference(
+            openapi_url=app.openapi_url,
+            title=app.title + " - Docs Profesionales",
+        )
 
 # Configuración de seguridad
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
