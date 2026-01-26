@@ -1,8 +1,9 @@
 import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from dotenv import load_dotenv
+
 
 # 1. Cargar las variables del archivo .env
 load_dotenv()
