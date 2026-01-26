@@ -8,3 +8,4 @@ python-multipart==0.0.6
 pydantic==2.5.3
 pip install python-dotenv
 pip install "pydantic[email]"
+pip install scalar-fastapi
