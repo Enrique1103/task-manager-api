@@ -33,7 +33,7 @@ def get_tasks(db: Session, user_id: int, status: str = None):
 def create_task(db: Session, task: schemas.TaskCreate, user_id: int):
     """Crea una tarea asociada a un usuario."""
     # .model_dump() es la forma correcta en Pydantic v2 (reemplaza a .dict())
-    # exclude_unset=True hace que SOLO se incluyan los campos que TÚ escribiste en Scalar
+    # exclude_unset=True hace que SOLO se incluyan los intoducidos
     task_data = task.model_dump(exclude_unset=True)
     
     db_task = models.Task(**task_data, user_id=user_id)
@@ -52,7 +52,7 @@ def update_task(db: Session, task_id: int, task_update: schemas.TaskUpdate, user
     if not db_task:
         return None
 
-    # exclude_unset=True evita que los campos que no enviaste se pongan en NULL
+    # exclude_unset=True evita que los campos que no se evian se pongan en NULL
     update_data = task_update.model_dump(exclude_unset=True) 
     
     for key, value in update_data.items():
