@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from app import models, database, schemas, crud, auth
+import models, database, schemas, crud, auth
 from jose import jwt, JWTError
 
 app = FastAPI(

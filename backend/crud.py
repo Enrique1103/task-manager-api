@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app import models, schemas, auth
+import models, schemas, auth
 
 # --- OPERACIONES DE USUARIOS ---
 

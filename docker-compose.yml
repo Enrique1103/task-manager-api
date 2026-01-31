@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # El Backend
+  api:
+    build: ./backend
+    env_file:
+      - .env
+    container_name: app_backend
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+    environment:
+     
+      - DATABASE_URL=postgresql+psycopg2://postgres:6374postgre@db:5432/tasks_BD
+      - SECRET_KEY=evertec_secret_key_2026_safe
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    restart: on-failure # Si falla por la BD, se reinicia solo
+
+  # La Base de Datos
+  db:
+    image: postgres:15-alpine
+    container_name: app_database
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=6374postgre
+      - POSTGRES_DB=tasks_BD
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./tasks_BD.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:
